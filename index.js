@@ -13,8 +13,11 @@ app.use(bodyParser.json()); // Xử lý dữ liệu gửi đến dạng JSON
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// require("./database/init.mongodb")
-// Kết nối cơ sở dữ liệu
+require("./database/init.mongodb")
+// Kết nối cơ sở dữ liệu Mongo
+
+require("./database/init.sqlServer")
+// Kết nối cơ sở dữ liệu SQL server
 
 // require("./redis/init.redis")
 // Kết nối REDIS

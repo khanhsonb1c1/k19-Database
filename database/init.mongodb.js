@@ -1,15 +1,15 @@
 
-// // Test
-// const connectString = "mongodb://localhost:27017"
+// Test
+const connectString = "mongodb://localhost:27017"
 
 
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 
-// // Connect to MongoDB
-// mongoose
-//   .connect(connectString)
-//   .then(() => console.log("MongoDB connected"))
-//   .catch((err) => console.error("MongoDB connection error:", err));
+// Connect to MongoDB
+mongoose
+  .connect(connectString)
+  .then(() => console.log("Kết nối thành công đến MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-// module.exports = mongoose;
+module.exports = mongoose;
