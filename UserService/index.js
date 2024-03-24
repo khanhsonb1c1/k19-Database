@@ -13,7 +13,7 @@ app.use(bodyParser.json()); // Xử lý dữ liệu gửi đến dạng JSON
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-require("./database/init.mongodb")
+// require("./database/init.mongodb")
 // Kết nối cơ sở dữ liệu Mongo
 
 require("./database/init.sqlServer")
@@ -23,7 +23,8 @@ require("./database/init.sqlServer")
 // Kết nối REDIS
 
 
-app.use("/api/", require("./routes/user.route"));
+app.use("/api/user/", require("./routes/user.route"));
+app.use("/api/account/", require("./routes/account.route"));
 // app.use("/api/", require("./routes/product.route"));
 // Khai báo route API
 
@@ -34,7 +35,7 @@ app.get('/', (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Khởi động User service với PORT: ${port}`)
 })
 
 
