@@ -15,6 +15,16 @@ const vehicleSchema = new mongoose.Schema({
     required: true,
     min: 1,
   },
+  isReady: {
+    type: Boolean,
+    default: true
+  },
+  schedules: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Schedule",
+    },
+  ],
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);

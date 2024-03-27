@@ -1,10 +1,11 @@
-const ScheduleDAO = require('../DAO/schedule.DAO');
+const ScheduleDAO = require("../DAO/schedule.DAO");
+const ScheduleService = require("../services/schedule.service");
 
 const ScheduleController = {
   async createSchedule(req, res) {
     try {
       const scheduleData = req.body;
-      const newSchedule = await ScheduleDAO.createSchedule(scheduleData);
+      const newSchedule = await ScheduleService.createSchedule(scheduleData);
       res.status(201).json(newSchedule);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -25,7 +26,7 @@ const ScheduleController = {
       const scheduleId = req.params.id;
       const schedule = await ScheduleDAO.getScheduleById(scheduleId);
       if (!schedule) {
-        return res.status(404).json({ message: 'Không tìm thấy lịch trình' });
+        return res.status(404).json({ message: "Không tìm thấy lịch trình" });
       }
       res.status(200).json(schedule);
     } catch (error) {
@@ -37,7 +38,10 @@ const ScheduleController = {
     try {
       const scheduleId = req.params.id;
       const updateData = req.body;
-      const updatedSchedule = await ScheduleDAO.updateSchedule(scheduleId, updateData);
+      const updatedSchedule = await ScheduleDAO.updateSchedule(
+        scheduleId,
+        updateData
+      );
       res.status(200).json(updatedSchedule);
     } catch (error) {
       res.status(500).json({ message: error.message });
