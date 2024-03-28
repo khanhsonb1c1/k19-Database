@@ -1,0 +1,8 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 297 169" width="297" height="169">
+	<title>hero-bg-shape-3-svg</title>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #b6ebfc } 
+	</style>
+	<path id="Layer" class="shp0" d="M296.3 0L296.3 97.9C295.3 106.3 288.7 113.3 281.7 117.4C274.3 121.6 265.8 123.4 257.4 125.1C196.2 137.8 135 150.4 73.7 163.1C62.6 165.4 51.4 167.7 40.1 167.4C28.8 167.1 17.1 164 8.6 156.6C5.3 153.8 2.5 150.3 1.2 146.2C0 142.7 0 139 0 135.3L0 0L296.3 0Z" />
+</svg>
