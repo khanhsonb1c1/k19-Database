@@ -13,7 +13,7 @@ const ScheduleDAO = {
 
   async getAllSchedules() {
     try {
-      const schedules = await Schedule.find();
+      const schedules = await Schedule.find().populate("vehicleId").populate("routeId");
       return schedules;
     } catch (error) {
       throw new Error("Đã xảy ra lỗi khi truy vấn tất cả lịch trình");
@@ -22,7 +22,8 @@ const ScheduleDAO = {
 
   async getScheduleById(scheduleId) {
     try {
-      const schedule = await Schedule.findById(scheduleId);
+      const schedule = await Schedule.findById(scheduleId).populate('vehicleId')
+      .populate('routeId').populate("ticketIds")
       return schedule;
     } catch (error) {
       console.error("Lỗi khi lấy thông tin lịch trình theo ID:", error);
@@ -61,7 +62,7 @@ const ScheduleDAO = {
           startTime: { [Op.gt]: from },
           endTime: { [Op.lt]: to }
         }
-      });
+      }).populate("vehicleId").populate("routeId");
       return schedules;
     } catch (error) {
       throw error;

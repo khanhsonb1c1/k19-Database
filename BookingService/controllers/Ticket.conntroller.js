@@ -1,11 +1,12 @@
 const TicketDAO = require("../DAO/Ticket.DAO");
+const { Schedule } = require("../models/Schedule.model");
 const TicketService = require("../services/ticket.service");
 
 const TicketController = {
   async createTicket(req, res) {
     try {
       const ticketData = req.body;
-      const newTicket = TicketService.createTicket(ticketData);
+      const newTicket = await TicketService.createTicket(ticketData);
       res.status(201).json(newTicket);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -49,7 +50,22 @@ const TicketController = {
     try {
       const ticketId = req.params.id;
       await TicketDAO.deleteTicket(ticketId);
-      res.status(204).end();
+
+      // Lấy schedule tương ứng với ticketId đã xóa
+      const schedule = await Schedule.findOneAndUpdate(
+        { ticketIds: ticketId },
+        { $pull: { ticketIds: ticketId } },
+        { new: true }
+      );
+
+      if (!schedule) {
+        return res
+          .status(404)
+          .json({ message: "Không tìm thấy lịch trình cho vé đã xóa" });
+      }
+      res.status(204).json({
+        message: "Xóa thành công"
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

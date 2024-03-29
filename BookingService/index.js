@@ -20,7 +20,7 @@ require("./database/init.mongodb")
 // require("./redis/init.redis")
 // Kết nối REDIS
 
-// app.use("/api/", require("./routes/product.route"));
+app.use("/api/", require("./routes/index"));
 // Khai báo route API
 
 
