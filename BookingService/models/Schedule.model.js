@@ -25,6 +25,12 @@ const scheduleSchema = new mongoose.Schema({
       ref: "Ticket",
     },
   ],
+  status: {
+    type: String,
+    default: "1"
+    // 1: còn chỗ
+    // 2: hết chỗ  
+  }
 });
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);

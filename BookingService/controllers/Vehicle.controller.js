@@ -1,4 +1,4 @@
-const VehicleDAO = require('../DAO/vehicle.DAO');
+const VehicleDAO = require("../DAO/Vehicle.DAO");
 
 const VehicleController = {
   async createVehicle(req, res) {
@@ -13,7 +13,10 @@ const VehicleController = {
 
   async getAllVehicles(req, res) {
     try {
-      const vehicles = await VehicleDAO.getAllVehicles();
+      const { from, to } = req.query;
+      const vehicles = await VehicleDAO.getAllVehicles({
+        filter: { from, to },
+      });
       res.status(200).json(vehicles);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -25,7 +28,7 @@ const VehicleController = {
       const vehicleId = req.params.id;
       const vehicle = await VehicleDAO.getVehicleById(vehicleId);
       if (!vehicle) {
-        return res.status(404).json({ message: 'Không tìm thấy phương tiện' });
+        return res.status(404).json({ mes6sage: "Không tìm thấy phương tiện" });
       }
       res.status(200).json(vehicle);
     } catch (error) {
@@ -37,7 +40,10 @@ const VehicleController = {
     try {
       const vehicleId = req.params.id;
       const updateData = req.body;
-      const updatedVehicle = await VehicleDAO.updateVehicle(vehicleId, updateData);
+      const updatedVehicle = await VehicleDAO.updateVehicle(
+        vehicleId,
+        updateData
+      );
       res.status(200).json(updatedVehicle);
     } catch (error) {
       res.status(500).json({ message: error.message });

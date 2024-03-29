@@ -10,7 +10,7 @@ const vehicleSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  seatCount: {
+  totalSlot: {
     type: Number,
     required: true,
     min: 1,

@@ -1,10 +1,11 @@
-const TicketDAO = require('../DAO/ticket.DAO');
+const TicketDAO = require("../DAO/Ticket.DAO");
+const TicketService = require("../services/ticket.service");
 
 const TicketController = {
   async createTicket(req, res) {
     try {
       const ticketData = req.body;
-      const newTicket = await TicketDAO.createTicket(ticketData);
+      const newTicket = TicketService.createTicket(ticketData);
       res.status(201).json(newTicket);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -25,7 +26,7 @@ const TicketController = {
       const ticketId = req.params.id;
       const ticket = await TicketDAO.getTicketById(ticketId);
       if (!ticket) {
-        return res.status(404).json({ message: 'Không tìm thấy vé xe' });
+        return res.status(404).json({ message: "Không tìm thấy vé xe" });
       }
       res.status(200).json(ticket);
     } catch (error) {

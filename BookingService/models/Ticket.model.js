@@ -19,15 +19,15 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  vehicleId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Vehicle",
-    required: true,
-  },
-  seatName: {
-    type: String,
-    required: false,
-  },
+  // vehicleId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Vehicle",
+  //   required: true,
+  // },
+  // seatName: {
+  //   type: String,
+  //   required: false,
+  // },
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);

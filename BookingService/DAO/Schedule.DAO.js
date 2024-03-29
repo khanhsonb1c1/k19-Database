@@ -52,6 +52,21 @@ const ScheduleDAO = {
       throw error;
     }
   },
+
+  async getSchedulesByRouteIdAndTime(routeId, from, to) {
+    try {
+      const schedules = await Schedule.findAll({
+        where: {
+          routeId: routeId,
+          startTime: { [Op.gt]: from },
+          endTime: { [Op.lt]: to }
+        }
+      });
+      return schedules;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = ScheduleDAO;

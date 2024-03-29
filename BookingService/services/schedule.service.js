@@ -1,5 +1,6 @@
 const ScheduleDAO = require('../DAO/schedule.DAO');
 const VehicleDAO = require("../DAO/Vehicle.DAO");
+// const { client, TIME_LIMIT } = require("../redis/init.redis");
 
 const ScheduleService = {
   async checkVehicleIsReady(vehicalId, startTime) {
@@ -38,6 +39,32 @@ const ScheduleService = {
       return error;
     }
   },
+
+ async getSchedule(filter) {
+  try {
+    let from = 0;
+    let to = 9999999999;
+
+    if (filter && filter.from) {
+      from = filter.from;
+    }
+
+    if (filter && filter.to) {
+      to = filter.to;
+    }
+
+    let schedules;
+    if (filter && filter.routeId) {
+      schedules = await ScheduleDAO.getSchedulesByRouteIdAndTime(filter.routeId, from, to);
+    } else {
+      schedules = await ScheduleDAO.getAllSchedules();
+    }
+
+    return schedules;
+  } catch (error) {
+    throw error;
+  }
+}
 };
 
 module.exports = ScheduleService;

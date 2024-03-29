@@ -1,7 +1,7 @@
-// // const PORT = 6379;
-// const redis = require("redis");
+// const PORT = 6379;
+const redis = require("redis");
 
-// const client = redis.createClient();
-// client.connect();
+const client = redis.createClient();
+client.connect();
 
-// module.exports = client;
+module.exports = client;

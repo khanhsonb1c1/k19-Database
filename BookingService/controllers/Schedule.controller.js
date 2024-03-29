@@ -14,7 +14,7 @@ const ScheduleController = {
 
   async getAllSchedules(req, res) {
     try {
-      const schedules = await ScheduleDAO.getAllSchedules();
+      const schedules = ScheduleService.getSchedule(req.params.query)
       res.status(200).json(schedules);
     } catch (error) {
       res.status(500).json({ message: error.message });
