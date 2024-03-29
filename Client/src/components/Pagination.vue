@@ -1,7 +1,8 @@
 <template>
   <div class="pagination p1">
     <ul>
-      <a href="#" v-if="paginate.current_page > 1" @click="changePage(paginate.current_page - 1)"><li><</li></a>
+      <a href="#" v-if="paginate.current_page > 1" @click="changePage(paginate.current_page - 1)"> <li><< /li></li></a>
+
       <a
         v-for="index in last"
         v-show="getPage(index) > 0 && getPage(index) <= paginate.last_page"
@@ -9,12 +10,13 @@
         :class="getPage(index) == paginate.current_page ? 'is-active' : ''"
         href="#"
         @click="changePage(getPage(index))"
-        ><li>{{ getPage(index) }}</li></a
       >
+        <li>{{ getPage(index) }}</li>
+      </a>
 
-      <a href="#" v-if="paginate.current_page < paginate.last_page" @click="changePage(paginate.current_page + 1)"
-        ><li>></li></a
-      >
+      <a href="#" v-if="paginate.current_page < paginate.last_page" @click="changePage(paginate.current_page + 1)">
+        <li>></li>
+      </a>
     </ul>
   </div>
 </template>
