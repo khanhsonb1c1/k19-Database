@@ -19,15 +19,20 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  vehicleId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Vehicle",
-    required: true,
-  },
-  seatName: {
+  status: {
     type: String,
-    required: false,
-  },
+    enum: ['done', 'create', 'confirm'],
+    default: 'create' // Giá trị mặc định
+  }
+  // vehicleId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Vehicle",
+  //   required: true,
+  // },
+  // seatName: {
+  //   type: String,
+  //   required: false,
+  // },
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);

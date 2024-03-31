@@ -1,10 +1,11 @@
-const RouteDAO = require('../DAO/route.DAO');
+const RouteDAO = require('../DAO/Route.DAO');
+const RouteService = require('../services/route.service');
 
 const RouteController = {
   async createRoute(req, res) {
     try {
       const routeData = req.body;
-      const newRoute = await RouteDAO.createRoute(routeData);
+      const newRoute = await RouteService.createRoute(routeData)
       res.status(201).json(newRoute);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -13,7 +14,7 @@ const RouteController = {
 
   async getAllRoutes(req, res) {
     try {
-      const routes = await RouteDAO.getAllRoutes();
+      const routes = await RouteService.getAllRoutes();
       res.status(200).json(routes);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -37,7 +38,7 @@ const RouteController = {
     try {
       const routeId = req.params.id;
       const updateData = req.body;
-      const updatedRoute = await RouteDAO.updateRoute(routeId, updateData);
+      const updatedRoute = await RouteService.updateRoute(routeId, updateData);
       res.status(200).json(updatedRoute);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -47,12 +48,14 @@ const RouteController = {
   async deleteRoute(req, res) {
     try {
       const routeId = req.params.id;
-      await RouteDAO.deleteRoute(routeId);
-      res.status(204).end();
+      await RouteService.deleteRoute(routeId);
+      res.status(204).json({
+        message: "Xóa thành công"
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  },
+  }
 };
 
 module.exports = RouteController;

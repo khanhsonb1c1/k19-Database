@@ -25,6 +25,12 @@ const scheduleSchema = new mongoose.Schema({
       ref: "Ticket",
     },
   ],
+  status: {
+    type: String,
+    enum: ['available', 'sold_out'],
+    required: true,
+    default: "available"
+  }
 });
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);

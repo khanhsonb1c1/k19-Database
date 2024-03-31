@@ -12,15 +12,14 @@ app.use(bodyParser.json()); // Xử lý dữ liệu gửi đến dạng JSON
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 require("./database/init.mongodb")
 // Kết nối cơ sở dữ liệu Mongo
 
 
-// require("./redis/init.redis")
+require("./redis/init.redis")
 // Kết nối REDIS
 
-// app.use("/api/", require("./routes/product.route"));
+app.use("/api/", require("./routes/index"));
 // Khai báo route API
 
 

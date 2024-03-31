@@ -1,13 +1,15 @@
-const TicketDAO = require('../DAO/ticket.DAO');
+const TicketDAO = require("../DAO/Ticket.DAO");
+const { Schedule } = require("../models/Schedule.model");
+const TicketService = require("../services/ticket.service");
 
 const TicketController = {
   async createTicket(req, res) {
     try {
       const ticketData = req.body;
-      const newTicket = await TicketDAO.createTicket(ticketData);
+      const newTicket = await TicketService.createTicket(ticketData);
       res.status(201).json(newTicket);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
@@ -16,20 +18,18 @@ const TicketController = {
       const tickets = await TicketDAO.getAllTickets();
       res.status(200).json(tickets);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
   async getTicketById(req, res) {
     try {
       const ticketId = req.params.id;
-      const ticket = await TicketDAO.getTicketById(ticketId);
-      if (!ticket) {
-        return res.status(404).json({ message: 'Không tìm thấy vé xe' });
-      }
+      const ticket = await TicketService.getTicketInfo(ticketId);
+     
       res.status(200).json(ticket);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
@@ -40,7 +40,7 @@ const TicketController = {
       const updatedTicket = await TicketDAO.updateTicket(ticketId, updateData);
       res.status(200).json(updatedTicket);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
@@ -48,9 +48,24 @@ const TicketController = {
     try {
       const ticketId = req.params.id;
       await TicketDAO.deleteTicket(ticketId);
-      res.status(204).end();
+
+      // Lấy schedule tương ứng với ticketId đã xóa
+      const schedule = await Schedule.findOneAndUpdate(
+        { ticketIds: ticketId },
+        { $pull: { ticketIds: ticketId } },
+        { new: true }
+      );
+
+      if (!schedule) {
+        return res
+          .status(404)
+          .json({ message: "Không tìm thấy lịch trình cho vé đã xóa" });
+      }
+      res.status(204).json({
+        message: "Xóa thành công"
+      });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 };

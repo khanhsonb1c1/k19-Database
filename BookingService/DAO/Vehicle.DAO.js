@@ -11,10 +11,11 @@ const VehicleDAO = {
     }
   },
 
-  async getAllVehicles() {
+  async getAllVehicles(filter) {
     try {
+     
       const vehicles = await Vehicle.find();
-      return vehicles;
+      return vehicles
     } catch (error) {
       throw new Error("Đã xảy ra lỗi khi truy vấn tất cả phương tiện");
     }

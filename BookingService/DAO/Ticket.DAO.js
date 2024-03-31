@@ -7,7 +7,7 @@ const TicketDAO = {
       return newTicket;
     } catch (error) {
       console.error("Lỗi khi tạo vé xe:", error);
-      throw error;
+      throw new Error(error);
     }
   },
 
