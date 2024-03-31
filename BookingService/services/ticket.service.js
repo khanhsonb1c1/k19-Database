@@ -3,6 +3,7 @@ const TicketDAO = require("../DAO/Ticket.DAO");
 const ScheduleDAO = require("../DAO/schedule.DAO");
 const { HOST_USER_API_SERVICE } = require("../config/API.config");
 const { Schedule } = require("../models/Schedule.model");
+// const fetch = require("node-fetch");
 
 const TicketService = {
   async createTicket(data) {
@@ -53,13 +54,25 @@ const TicketService = {
 
   async getTicketInfo(ticketId) {
     try {
+      // Lấy thông tin vé xe từ database
       const ticket = await TicketDAO.getTicketById(ticketId);
-      const user = await fetch(
-        `${HOST_USER_API_SERVICE}/api/user/$${ticket.customerId}`
+      if (!ticket) {
+        throw new Error("Không tìm thấy vé xe");
+      }
+
+      // Lấy thông tin người dùng từ dịch vụ người dùng
+      const response = await fetch(
+        `${HOST_USER_API_SERVICE}/api/user/${ticket.customerId}`
       );
+      if (!response.ok) {
+        throw new Error("Không thể lấy thông tin người dùng từ dịch vụ User");
+      }
+
+      const userData = await response.json(); // Chuyển đổi dữ liệu JSON trả về từ dịch vụ người dùng
+
+      // Trả về thông tin vé xe kèm thông tin người dùng
       return {
-        ...ticket,
-        userInfo: user,
+        ticket, userData
       };
     } catch (error) {
       return new Error(error);

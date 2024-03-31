@@ -43,6 +43,21 @@ const RouteService = {
     }
   },
 
+
+  async createRoute(newData) {
+    try {
+      const createDAO = await RouteDAO.createRoute(newData);
+
+      // Cập nhật lại cache trong Redis sau khi cập nhật thành công
+      await redisClient.del('allRoutes');
+      console.log('Dữ liệu tuyến đường đã được reset trong Redis.');
+
+      return createDAO;
+    } catch (error) {
+      return new Error(error);
+    }
+  },
+
   async deleteRoute(routeId) {
     try {
       await RouteDAO.deleteRoute(routeId);

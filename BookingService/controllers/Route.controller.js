@@ -5,7 +5,7 @@ const RouteController = {
   async createRoute(req, res) {
     try {
       const routeData = req.body;
-      const newRoute = await RouteDAO.createRoute(routeData);
+      const newRoute = await RouteService.createRoute(routeData)
       res.status(201).json(newRoute);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -49,7 +49,7 @@ const RouteController = {
     try {
       const routeId = req.params.id;
       await RouteService.deleteRoute(routeId);
-      res.status(204).josn({
+      res.status(204).json({
         message: "Xóa thành công"
       });
     } catch (error) {

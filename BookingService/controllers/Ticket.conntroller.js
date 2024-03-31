@@ -9,7 +9,7 @@ const TicketController = {
       const newTicket = await TicketService.createTicket(ticketData);
       res.status(201).json(newTicket);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
@@ -18,20 +18,18 @@ const TicketController = {
       const tickets = await TicketDAO.getAllTickets();
       res.status(200).json(tickets);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
   async getTicketById(req, res) {
     try {
       const ticketId = req.params.id;
-      const ticket = await TicketDAO.getTicketById(ticketId);
-      if (!ticket) {
-        return res.status(404).json({ message: "Không tìm thấy vé xe" });
-      }
+      const ticket = await TicketService.getTicketInfo(ticketId);
+     
       res.status(200).json(ticket);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
@@ -42,7 +40,7 @@ const TicketController = {
       const updatedTicket = await TicketDAO.updateTicket(ticketId, updateData);
       res.status(200).json(updatedTicket);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 
@@ -67,7 +65,7 @@ const TicketController = {
         message: "Xóa thành công"
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error });
     }
   },
 };
