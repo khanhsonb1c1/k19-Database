@@ -19,6 +19,11 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ['done', 'create', 'confirm'],
+    default: 'create' // Giá trị mặc định
+  }
   // vehicleId: {
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: "Vehicle",

@@ -41,7 +41,7 @@ const TicketService = {
 
         if (vehicleTotalSlot == slotCheck) {
           await ScheduleDAO.updateSchedule(scheduleId, {
-            status: "2",
+            status: "sold_out",
           });
         }
         return ticketData;

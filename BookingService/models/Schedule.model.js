@@ -27,9 +27,9 @@ const scheduleSchema = new mongoose.Schema({
   ],
   status: {
     type: String,
-    default: "1"
-    // 1: còn chỗ
-    // 2: hết chỗ  
+    enum: ['available', 'sold_out'],
+    required: true,
+    default: "available"
   }
 });
 
