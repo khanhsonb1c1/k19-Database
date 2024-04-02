@@ -6,60 +6,52 @@
           <ul>
             <li>
               <a href="#"
-                ><span class="car_img"><i class="fa fa-car" aria-hidden="true"></i></span>Cab</a
+                ><span class="car_img"
+                  ><i class="fa fa-car" aria-hidden="true"></i></span
+                >Cab</a
               >
             </li>
             <li>
               <a href="#"
-                ><span class="car_img"><i class="fa fa-bus" aria-hidden="true"></i></span>Bus</a
+                ><span class="car_img"
+                  ><i class="fa fa-bus" aria-hidden="true"></i></span
+                >Bus</a
               >
             </li>
             <li>
               <a href="#"
-                ><span class="car_img"><i class="fa fa-train" aria-hidden="true"></i></span>Trains</a
+                ><span class="car_img"
+                  ><i class="fa fa-train" aria-hidden="true"></i></span
+                >Trains</a
               >
             </li>
             <li>
               <a href="#"
-                ><span class="car_img"><i class="fa fa-bed" aria-hidden="true"></i></span>Hotels</a
+                ><span class="car_img"
+                  ><i class="fa fa-bed" aria-hidden="true"></i></span
+                >Hotels</a
               >
             </li>
             <li class="active">
               <a href="#"
-                ><span class="car_img"><i class="fa fa-plane" aria-hidden="true"></i></span>Flight</a
+                ><span class="car_img"
+                  ><i class="fa fa-plane" aria-hidden="true"></i></span
+                >Flight</a
               >
             </li>
           </ul>
         </div>
         <div class="more_bt">
           <a href="#"
-            >More<span class="arrow_icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span
+            >More<span class="arrow_icon"
+              ><i class="fa fa-arrow-right" aria-hidden="true"></i></span
           ></a>
         </div>
       </div>
       <div class="address_box">
         <div class="address_box_main">
-          <div class="box_left">
-            <h3 class="going_text">Where are you going?</h3>
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search" />
-              <div class="input-group-append">
-                <button class="btn btn-secondary airport_text" type="button">
-                  <i class="fa fa-map-marker" aria-hidden="true" style="color: #9b9b9a"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="box_middle">
-            <h3 class="going_text">Check-in</h3>
-            <input id="datepicker" placeholder="12/12/2020" width="270" />
-          </div>
-          <div class="box_middle_1">
-            <h3 class="going_text">Check-out</h3>
-            <input id="datepicker" placeholder="12/12/2020" width="270" />
-          </div>
           <div class="box_right">
-            <h3 class="going_text">Rooms</h3>
+            <h3 class="going_text">Tuyến đường(*)</h3>
             <form>
               <div class="form-group">
                 <select class="form-control" id="">
@@ -72,6 +64,12 @@
               </div>
             </form>
           </div>
+
+          <div class="box_right">
+            <h3 class="going_text">Thời gian (tùy chọn)</h3>
+            <div>{{ dates.start }}-{{ dates.end }}</div>
+            <input-date-field @updateDate="getDate($event)" />
+          </div>
         </div>
       </div>
       <div class="search_bt"><a href="#">Search</a></div>
@@ -81,15 +79,43 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import InputDateField from "../../../components/InputDateField.vue";
 
 export default defineComponent({
-  components: {},
+  components: { InputDateField },
+  data() {
+    return {
+      dates: {
+        start: 0,
+        end: 0,
+      },
+    };
+  },
   computed: {},
   mounted() {
     //
   },
 
   watch: {},
+  methods: {
+    convertDay(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear();
+
+      return `${day}/${month}/${year}`;
+    },
+    convertTimeStamp(dateString) {
+      const date = new Date(dateString);
+      return Math.floor(date.getTime() / 1000);
+    },
+    getDate(e) {
+      console.log(e.start);
+      this.dates.start = this.convertDay(e.start);
+      this.dates.end = this.convertDay(e.end);
+    },
+  },
 });
 </script>
 
