@@ -1,53 +1,6 @@
 <template>
   <div class="banner_section layout_padding">
     <div class="container">
-      <div class="taital_main">
-        <div class="booking_menu">
-          <ul>
-            <li>
-              <a href="#"
-                ><span class="car_img"
-                  ><i class="fa fa-car" aria-hidden="true"></i></span
-                >Cab</a
-              >
-            </li>
-            <li>
-              <a href="#"
-                ><span class="car_img"
-                  ><i class="fa fa-bus" aria-hidden="true"></i></span
-                >Bus</a
-              >
-            </li>
-            <li>
-              <a href="#"
-                ><span class="car_img"
-                  ><i class="fa fa-train" aria-hidden="true"></i></span
-                >Trains</a
-              >
-            </li>
-            <li>
-              <a href="#"
-                ><span class="car_img"
-                  ><i class="fa fa-bed" aria-hidden="true"></i></span
-                >Hotels</a
-              >
-            </li>
-            <li class="active">
-              <a href="#"
-                ><span class="car_img"
-                  ><i class="fa fa-plane" aria-hidden="true"></i></span
-                >Flight</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div class="more_bt">
-          <a href="#"
-            >More<span class="arrow_icon"
-              ><i class="fa fa-arrow-right" aria-hidden="true"></i></span
-          ></a>
-        </div>
-      </div>
       <div class="address_box">
         <div class="address_box_main">
           <div class="box_right">
@@ -66,9 +19,8 @@
           </div>
 
           <div class="box_right">
-            <h3 class="going_text">Thời gian (tùy chọn)</h3>
-            <div>{{ dates.start }}-{{ dates.end }}</div>
-            <input-date-field @updateDate="getDate($event)" />
+            <h3 class="going_text">Thời gian (7 ngày tới)</h3>
+            <input type="text" :placeholder="displayDate" readonly/>
           </div>
         </div>
       </div>
@@ -79,10 +31,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import InputDateField from "../../../components/InputDateField.vue";
 
 export default defineComponent({
-  components: { InputDateField },
+  components: {},
   data() {
     return {
       dates: {
@@ -91,7 +42,31 @@ export default defineComponent({
       },
     };
   },
-  computed: {},
+  computed: {
+    
+    dateNow() {
+      const date =  new Date()
+      const dateConvert = this.convertDay(date)
+      return {
+        date, dateConvert
+      }
+    },
+    dateLastWeek() {
+      let date = new Date();
+
+      const dateConvert = this.convertDay(date.setDate(date.getDate() + 7))
+
+      return {
+        date, dateConvert
+      }
+    },
+    displayDate() {
+      return this.dateNow.dateConvert + "-" + this.dateLastWeek.dateConvert
+    },
+    tims() {
+      return this.convertTimeStamp(this.dateNow.date)
+    }
+  },
   mounted() {
     //
   },
@@ -107,16 +82,20 @@ export default defineComponent({
       return `${day}/${month}/${year}`;
     },
     convertTimeStamp(dateString) {
-      const date = new Date(dateString);
-      return Math.floor(date.getTime() / 1000);
+      // const date = new Date(dateString);
+      return Math.floor(dateString.getTime() / 1000);
     },
-    getDate(e) {
-      console.log(e.start);
-      this.dates.start = this.convertDay(e.start);
-      this.dates.end = this.convertDay(e.end);
-    },
+
   },
 });
 </script>
 
-<style></style>
+<style scoped>
+input {
+  padding: 0.75em;
+  border: 1px solid #2b2278 !important;
+  border-radius: 5px;
+  width: 100%;
+  font-weight: 600;
+}
+</style>
