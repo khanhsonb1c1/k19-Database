@@ -7,12 +7,11 @@
             <h3 class="going_text">Tuyến đường(*)</h3>
             <form>
               <div class="form-group">
-                <select class="form-control" id="">
-                  <option>Hair Styles</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <select class="form-control" id="" v-model="routeSelected">
+                  <option value="">Chọn tuyến đường</option>
+                  <option v-for="item in routes" :key="item._id" :value="item._id">
+                    {{ item.name }}
+                  </option>
                 </select>
               </div>
             </form>
@@ -20,55 +19,108 @@
 
           <div class="box_right">
             <h3 class="going_text">Thời gian (7 ngày tới)</h3>
-            <input type="text" :placeholder="displayDate" readonly/>
+            <input type="text" :placeholder="displayDate" readonly />
           </div>
         </div>
       </div>
-      <div class="search_bt"><a href="#">Search</a></div>
+      <div class="search_bt">
+        <a href="#" @click="fetchSearch()">Tìm kiếm</a>
+      </div>
+
+      <div class="address_box">
+        <div class="address_box_main box-search">
+          <div class="card w-100" v-for="schedule in schedules" :key="schedule._id">
+            <div class="card-body">
+              <img width="64" height="64" src="https://img.icons8.com/glyph-neue/64/bus--v1.png" alt="bus--v1" />
+              <div class="card-content">
+                <h3>{{ schedule.vehicleId.licensePlate }}</h3>
+                <span>
+                  Số ghế trống:
+                  <strong>{{ schedule.availableSlot }}/{{ schedule.vehicleId.totalSlot }}</strong>
+                </span>
+                <span
+                  >Giá vé: <strong>{{ convertPrice(schedule.routeId.price) }}</strong></span
+                >
+                <span
+                  >Thời gian dự kiến: <strong>{{ convertEstimatedTime(schedule.routeId.estimatedTime) }}</strong></span
+                >
+              </div>
+              <div class="card-content">
+                <h3>{{ schedule.routeId.name }}</h3>
+
+                <span>
+                  Giờ xuất bến:
+                  <strong>{{ formatDateFromTimestamp(schedule.startTime) }}</strong>
+                </span>
+                <span>
+                  Giờ đến:
+                  <strong>{{ formatDateFromTimestamp(schedule.endTime) }}</strong>
+                </span>
+              </div>
+              <div class="card-content">
+                <button type="button" class="btn btn-primary" @click="onCreateTicket(schedule)">Đặt vé</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { HOST_BOOKING_SERVICE } from "../../../services/getAPI";
 
 export default defineComponent({
   components: {},
   data() {
     return {
-      dates: {
-        start: 0,
-        end: 0,
-      },
+      routeSelected: "",
+      routes: [] as any,
+      schedules: [] as any,
     };
   },
   computed: {
-    
     dateNow() {
-      const date =  new Date()
-      const dateConvert = this.convertDay(date)
+      const date = new Date();
+      const dateConvert = this.convertDay(date);
       return {
-        date, dateConvert
-      }
+        date,
+        dateConvert,
+      };
     },
     dateLastWeek() {
-      let date = new Date();
+      const date = new Date();
 
-      const dateConvert = this.convertDay(date.setDate(date.getDate() + 7))
+      const dateConvert = this.convertDay(date.setDate(date.getDate() + 7));
 
       return {
-        date, dateConvert
-      }
+        date,
+        dateConvert,
+      };
     },
     displayDate() {
-      return this.dateNow.dateConvert + "-" + this.dateLastWeek.dateConvert
+      return this.dateNow.dateConvert + "-" + this.dateLastWeek.dateConvert;
     },
-    tims() {
-      return this.convertTimeStamp(this.dateNow.date)
-    }
+    timeSelected() {
+      return {
+        from: this.convertTimeStamp(this.dateNow.date),
+        to: this.convertTimeStamp(this.dateLastWeek.date),
+      };
+    },
+
+    storeUserInfo() {
+      const storedUserInfo = localStorage.getItem("userInfo");
+      return storedUserInfo ? JSON.parse(storedUserInfo) : {};
+    },
   },
   mounted() {
     //
+  },
+
+  created() {
+    this.fetchRoutes();
   },
 
   watch: {},
@@ -85,12 +137,107 @@ export default defineComponent({
       // const date = new Date(dateString);
       return Math.floor(dateString.getTime() / 1000);
     },
+    formatDateFromTimestamp(timestamp) {
+      const date = new Date(timestamp * 1000);
+      const day = ("0" + date.getDate()).slice(-2);
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const year = date.getFullYear();
+      const hours = ("0" + date.getHours()).slice(-2);
+      const minutes = ("0" + date.getMinutes()).slice(-2);
+      return `${day}/${month}/${year} - ${hours}:${minutes}`;
+    },
+    convertEstimatedTime(timestamp) {
+      const totalMinutes = Math.floor(timestamp / 60);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
 
+      if (hours > 0) {
+        return `${hours} giờ ${minutes} phút`;
+      } else {
+        return `${minutes} phút`;
+      }
+    },
+
+    convertPrice(price) {
+      // Làm tròn giá thành số nguyên
+      const roundedPrice = Math.round(price);
+      // Sử dụng toLocaleString để thêm dấu phẩy
+      return roundedPrice.toLocaleString();
+    },
+
+    async fetchRoutes() {
+      try {
+        const response = await fetch(`${HOST_BOOKING_SERVICE}/api/route`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch route data");
+        }
+
+        const data = await response.json();
+        this.routes = data;
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchSearch() {
+      try {
+        const response = await fetch(
+          `${HOST_BOOKING_SERVICE}/api/schedule?routeId=${this.routeSelected}&from=${this.timeSelected.from}&to=${this.timeSelected.to}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch route data");
+        }
+
+        const data = await response.json();
+        this.schedules = data;
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    onCreateTicket(schedule) {
+      fetch(`${HOST_BOOKING_SERVICE}/api/ticket`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          scheduleId: schedule._id,
+          price: schedule.routeId.price,
+          phoneContact: this.storeUserInfo.phoneNumber,
+          customerId: this.storeUserInfo.id,
+        }),
+      })
+        .then(() => {
+          this.$toast.success("Đặt vé thành công.");
+        })
+        .catch(() => {
+          this.$toast.error("Đặt vé thất bại, có lỗi xảy ra.");
+        });
+    },
   },
 });
 </script>
 
 <style scoped>
+.box-search {
+  flex-wrap: wrap;
+}
+.card {
+  margin-top: 1em;
+}
+img {
+  width: 100px;
+  margin-right: 3em;
+}
+.card-body {
+  display: flex;
+}
+.card-content {
+  margin-right: 5rem;
+  display: flex;
+  flex-direction: column;
+}
 input {
   padding: 0.75em;
   border: 1px solid #2b2278 !important;

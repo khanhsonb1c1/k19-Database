@@ -15,7 +15,7 @@ const TicketController = {
 
   async getAllTickets(req, res) {
     try {
-      const tickets = await TicketDAO.getAllTickets();
+      const tickets = await TicketDAO.getAllTickets(req.query);
       res.status(200).json(tickets);
     } catch (error) {
       res.status(500).json({ message: error });

@@ -14,7 +14,7 @@ const ScheduleController = {
 
   async getAllSchedules(req, res) {
     try {
-      const schedules = await ScheduleService.getSchedule(req.params.query)
+      const schedules = await ScheduleService.getSchedule(req.query)
       res.status(200).json(schedules);
     } catch (error) {
       res.status(500).json({ message: error.message });

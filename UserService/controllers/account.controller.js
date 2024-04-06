@@ -11,6 +11,7 @@ const AccountController = {
         return res.json({
           status: true,
           data: {
+            id: responseData.id,
             fullName: responseData.fullName,
             username: responseData.username,
             phoneNumber: responseData.phoneNumber,
@@ -18,14 +19,14 @@ const AccountController = {
           },
         });
       } else {
-        return res.json({
+        return res.status(500).json({
           status: false,
           message: "Tên đăng nhập hoặc mật khẩu không trùng khớp",
         });
       }
     } catch (error) {
       console.error("Lỗi đăng nhập:", error);
-      res.json({
+      res.status(500).json({
         status: false,
         message: "Lỗi đăng nhập",
       });
@@ -34,11 +35,11 @@ const AccountController = {
 
   async ChangePassword(req, res) {
     try {
-      const { userId, password, newPassword } = req.body;
-      const responseData = await UserDAO.getUserById(userId);
+      const { username, password, newPassword } = req.body;
+      const responseData = await UserDAO.getUserByUsername(username);
 
       if (responseData.password == password) {
-        await UserDAO.updateUser(userId, {
+        await UserDAO.updateUser(responseData.id, {
           password: newPassword,
         });
         res.status(200).json({

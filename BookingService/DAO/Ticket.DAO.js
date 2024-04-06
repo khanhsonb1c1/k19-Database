@@ -11,8 +11,20 @@ const TicketDAO = {
     }
   },
 
-  async getAllTickets() {
+  async getAllTickets(query) {
     try {
+
+      if (query.customerId) {
+        const tickets = await Ticket.find({
+          customerId: query.customerId
+        }).populate({
+          path: 'scheduleId',
+          populate: {
+            path: 'routeId'
+          }
+        });
+        return tickets;
+      }
       const tickets = await Ticket.find();
       return tickets;
     } catch (error) {
