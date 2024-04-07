@@ -52,6 +52,7 @@ const ScheduleService = {
   },
 
   async getSchedule(filter) {
+    console.log(filter, "filter");
     try {
       let from = 0;
       let to = 9999999999;

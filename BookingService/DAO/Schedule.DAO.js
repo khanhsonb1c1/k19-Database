@@ -13,7 +13,9 @@ const ScheduleDAO = {
 
   async getAllSchedules() {
     try {
-      const schedules = await Schedule.find().populate("vehicleId").populate("routeId");
+      const schedules = await Schedule.find()
+        .populate("vehicleId")
+        .populate("routeId");
       return schedules;
     } catch (error) {
       throw new Error("Đã xảy ra lỗi khi truy vấn tất cả lịch trình");
@@ -22,8 +24,10 @@ const ScheduleDAO = {
 
   async getScheduleById(scheduleId) {
     try {
-      const schedule = await Schedule.findById(scheduleId).populate('vehicleId')
-      .populate('routeId').populate("ticketIds")
+      const schedule = await Schedule.findById(scheduleId)
+        .populate("vehicleId")
+        .populate("routeId")
+        .populate("ticketIds");
       return schedule;
     } catch (error) {
       console.error("Lỗi khi lấy thông tin lịch trình theo ID:", error);
@@ -56,13 +60,15 @@ const ScheduleDAO = {
 
   async getSchedulesByRouteIdAndTime(routeId, from, to) {
     try {
-      const schedules = await Schedule.findAll({
-        where: {
-          routeId: routeId,
-          startTime: { [Op.gt]: from },
-          endTime: { [Op.lt]: to }
-        }
-      }).populate("vehicleId").populate("routeId");
+      console.log("222");
+
+      const schedules = await Schedule.find({
+        routeId: routeId,
+        startTime: { $gt: from },
+        endTime: { $lt: to },
+      })
+        .populate("vehicleId")
+        .populate("routeId");
       return schedules;
     } catch (error) {
       throw error;
