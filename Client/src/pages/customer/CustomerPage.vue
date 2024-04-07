@@ -35,6 +35,12 @@
               <span
                 >Thời gian xuất bến: <strong>{{ formatDateFromTimestamp(ticket.scheduleId.startTime) }}</strong></span
               >
+              <span
+                >Địa điểm đón: <strong>{{ ticket.pickupLocation }}</strong></span
+              >
+              <span
+                >Số điện thoại liên hệ: <strong>{{ ticket.phoneContact }}</strong></span
+              >
             </div>
           </div>
         </div>
@@ -96,7 +102,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .container {
-  height: 80vh;
+  mim-height: 80vh;
 }
 img {
   width: 100px;

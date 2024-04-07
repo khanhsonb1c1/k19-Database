@@ -8,7 +8,7 @@ const { Schedule } = require("../models/Schedule.model");
 const TicketService = {
   async createTicket(data) {
     try {
-      const { scheduleId, price, customerId, phoneContact } = data;
+      const { scheduleId, price, customerId, phoneContact, pickupLocation } = data;
 
       const schedule = await ScheduleDAO.getScheduleById(scheduleId);
       if (!schedule) {
@@ -27,6 +27,7 @@ const TicketService = {
           price,
           customerId,
           phoneContact,
+          pickupLocation,
         });
 
         // Lấy ra schedule cần cập nhật

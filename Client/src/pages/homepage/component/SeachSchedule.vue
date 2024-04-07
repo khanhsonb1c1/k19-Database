@@ -58,10 +58,44 @@
                 </span>
               </div>
               <div class="card-content">
-                <button type="button" class="btn btn-primary" @click="onCreateTicket(schedule)">Đặt vé</button>
+                <button type="button" class="btn btn-primary" @click="onSelectedSchedule(schedule)">Đặt vé</button>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="modal-custom shadow" v-if="isCreateTicket">
+        <div class="close-btn" style="float: right;" @click="onShowModal">X</div>
+        <div class="card " style="border: none">
+          <h3>Thông tin đặt vé</h3>
+          <form>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input
+                v-model="phoneNumber"
+                class="form-control form-control-lg"
+                placeholder="Nhập số điện thoại liên hệ"
+              />
+              <!-- <label class="form-label" for="form3Example3">Email address</label> -->
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-3">
+              <input v-model="pickupLocation" class="form-control form-control-lg" placeholder="Nhập địa điểm đón" />
+            </div>
+
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button
+                @click="onCreateTicket"
+                type="button"
+                class="btn btn-primary btn-lg w-100"
+                style="padding-left: 2.5rem; padding-right: 2.5rem"
+              >
+                Đặt vé
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -79,6 +113,10 @@ export default defineComponent({
       routeSelected: "",
       routes: [] as any,
       schedules: [] as any,
+      phoneNumber: "",
+      pickupLocation: "", // Địa điểm đón khách
+      isCreateTicket: false,
+      scheduleSelected: {} as any,
     };
   },
   computed: {
@@ -195,16 +233,27 @@ export default defineComponent({
         console.error(error);
       }
     },
-    onCreateTicket(schedule) {
+
+    onShowModal() {
+      this.isCreateTicket = !this.isCreateTicket;
+    },
+
+    onSelectedSchedule(scheduleSelected) {
+      this.scheduleSelected = scheduleSelected;
+      this.onShowModal();
+    },
+
+    onCreateTicket() {
       fetch(`${HOST_BOOKING_SERVICE}/api/ticket`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          scheduleId: schedule._id,
-          price: schedule.routeId.price,
-          phoneContact: this.storeUserInfo.phoneNumber,
+          scheduleId: this.scheduleSelected._id,
+          price: this.scheduleSelected.routeId.price,
+          phoneContact: this.phoneNumber,
+          pickupLocation: this.pickupLocation,
           customerId: this.storeUserInfo.id,
         }),
       })
@@ -220,6 +269,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.modal-custom {
+  width: 600px;
+  height: auto;
+  position: fixed;
+  top: 5em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2em;
+  background: white;
+  z-index: 10000;
+}
+.modal-custom h3 {
+  text-align: center;
+  font-size: 2em;
+  text-transform: uppercase;
+}
 .box-search {
   flex-wrap: wrap;
 }
@@ -244,5 +309,14 @@ input {
   border-radius: 5px;
   width: 100%;
   font-weight: 600;
+}
+
+.close-btn {
+  color: red;
+}
+.close-btn:hover {
+  scale: 1.2;
+  color: blue;
+  cursor: pointer;
 }
 </style>

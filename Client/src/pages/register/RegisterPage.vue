@@ -55,7 +55,6 @@
             <div class="form-outline mb-3">
               <input
                 v-model="full_name"
-                type="password"
                 id="form3Example4"
                 class="form-control form-control-lg"
                 placeholder="Enter full name"
@@ -67,7 +66,7 @@
                 v-model="address"
                 id="form3Example4"
                 class="form-control form-control-lg"
-                placeholder="Enter password"
+                placeholder="Enter address"
               />
               <!-- <label class="form-label" for="form3Example4">Password</label> -->
             </div>
@@ -76,7 +75,7 @@
                 v-model="phone_number"
                 id="form3Example4"
                 class="form-control form-control-lg"
-                placeholder="Enter password"
+                placeholder="Enter phone number"
               />
               <!-- <label class="form-label" for="form3Example4">Password</label> -->
             </div>
